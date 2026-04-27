@@ -222,5 +222,12 @@ def my_applications():
     
     return render_template('my_applications.html', jobs=applied_jobs, name=session['name'])
 
+@app.route('/search')
+def search():
+    query = request.args.get('q')
+    jobs = cursor.execute("SELECT * FROM jobs WHERE title LIKE ?", ('%'+query+'%',)).fetchall()
+    return render_template('index.html', jobs=jobs)
+
 if __name__ == '__main__':
     app.run(host='0.0.0.0',port=5000,debug=True)
+
