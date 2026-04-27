@@ -235,8 +235,8 @@ def search():
     
     jobs = cursor.execute("SELECT * FROM jobs WHERE title LIKE ?", ('%'+query+'%',)).fetchall()
     
-    conn.close()  # Connection band karna zaroori hai
-    return render_template('index.html', jobs=jobs)
+    conn.close()  
+    return render_template('dashboard.html', jobs=jobs, name="Guest", skills="") 
 
 if __name__ == '__main__':
     app.run(host='0.0.0.0',port=5000,debug=True)
