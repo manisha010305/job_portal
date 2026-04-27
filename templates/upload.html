@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Upload Resume - Job Portal</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+</head>
+<body>
+    <div class="container">
+        <h1>Job Portal</h1>
+        
+        <div class="nav">
+            <a href="/dashboard">← Back to Dashboard</a>
+            <a href="/logout" class="logout">Logout</a>
+        </div>
+
+        <!-- Flash Messages -->
+        {% with messages = get_flashed_messages(with_categories=true) %}
+          {% if messages %}
+            <div class="flash-container">
+              {% for category, message in messages %}
+                <div class="flash {{ category }}">
+                  {{ message }}
+                  <span class="close-btn" onclick="this.parentElement.style.display='none'">&times;</span>
+                </div>
+              {% endfor %}
+            </div>
+          {% endif %}
+        {% endwith %}
+
+        <div class="job-card">
+            <h2>Upload Your Resume 📄</h2>
+            <p>We'll extract your skills automatically from PDF</p>
+            
+            <form method="POST" enctype="multipart/form-data">
+                <div class="form-group">
+                    <label>Select PDF Resume</label>
+                    <input type="file" name="resume" accept=".pdf" required>
+                </div>
+                <button type="submit" class="btn">Upload & Extract Skills</button>
+            </form>
+        </div>
+    </div>
+</body>
+</html>

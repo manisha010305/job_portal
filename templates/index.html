@@ -1,0 +1,103 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>HireHub - Find Your Dream Job</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+    <style>
+        .landing {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            text-align: center;
+            color: white;
+            padding: 20px;
+        }
+        .logo {
+            font-size: 48px;
+            font-weight: 800;
+            margin-bottom: 10px;
+        }
+        .logo span {
+            color: #ffd700;
+        }
+        .tagline {
+            font-size: 24px;
+            font-weight: 300;
+            margin-bottom: 8px;
+        }
+        .sub-tagline {
+            font-size: 16px;
+            opacity: 0.9;
+            margin-bottom: 40px;
+        }
+        .landing-buttons {
+            display: flex;
+            gap: 15px;
+            width: 100%;
+            max-width: 400px;
+        }
+        .landing-btn {
+            flex: 1;
+            padding: 16px;
+            border-radius: 50px;
+            font-size: 16px;
+            font-weight: 600;
+            text-decoration: none;
+            transition: 0.3s;
+        }
+        .btn-login {
+            background: white;
+            color: #667eea;
+        }
+        .btn-register {
+            background: rgba(255,255,255,0.2);
+            color: white;
+            border: 2px solid white;
+        }
+        .btn-login:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 10px 20px rgba(0,0,0,0.2);
+        }
+        .features {
+            margin-top: 50px;
+            display: flex;
+            gap: 30px;
+            flex-wrap: wrap;
+            justify-content: center;
+        }
+        .feature {
+            font-size: 14px;
+            opacity: 0.9;
+        }
+        @media only screen and (max-width: 600px) {
+            .logo { font-size: 36px; }
+            .tagline { font-size: 20px; }
+            .landing-buttons { flex-direction: column; }
+            .features { flex-direction: column; gap: 15px; }
+        }
+    </style>
+</head>
+<body>
+    <div class="landing">
+        <div class="logo">Hire<span>Hub</span></div>
+        <div class="tagline">Launch Your Career Today</div>
+        <div class="sub-tagline">1000+ jobs from top companies waiting for you</div>
+        
+        <div class="landing-buttons">
+            <a href="/login" class="landing-btn btn-login">Login</a>
+            <a href="/signup" class="landing-btn btn-register">Sign Up</a>
+        </div>
+
+        <div class="features">
+            <div class="feature">✓ Free Resume Upload</div>
+            <div class="feature">✓ Smart Job Matching</div>
+            <div class="feature">✓ Instant Apply</div>
+        </div>
+    </div>
+</body>
+</html>

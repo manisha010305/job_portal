@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Post Job</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+    <style>
+        form { display: flex; flex-direction: column; gap: 10px; }
+        label { font-weight: bold; margin-top: 10px; }
+        input, textarea { padding: 8px; border: 1px solid #ccc; border-radius: 4px; }
+        .btn { margin-top: 15px; padding: 10px; width: 120px; }
+        .btn-danger { background: #dc3545; color: white; margin-left: 10px; }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Job Portal</h1>
+        <div>
+            <a href="/dashboard" class="btn">← Back to Dashboard</a>
+            <a href="/logout" class="btn btn-danger">Logout</a>
+        </div>
+
+        <h2>Post a New Job 📝</h2>
+        <p>Fill details to post job for candidates</p>
+        
+        <form method="POST">
+            <label>Job Title *</label>
+            <input type="text" name="title" required>
+
+            <label>Company *</label>
+            <input type="text" name="company" required>
+
+            <label>Location</label>
+            <input type="text" name="location" placeholder="Delhi, Bangalore, Remote">
+
+            <label>Salary</label>
+            <input type="text" name="salary" placeholder="5 LPA or 50000/month">
+
+            <label>Required Skills (comma separated) *</label>
+            <input type="text" name="skills" placeholder="python, sql, flask" required>
+
+            <label>Job Description *</label>
+            <textarea name="description" rows="4" placeholder="Write job details here..." required></textarea>
+
+            <button type="submit" class="btn">Post Job</button>
+        </form>
+    </div>
+</body>
+</html>

@@ -1,0 +1,80 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dashboard - Job Portal</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+</head>
+<body>
+    <div class="container">
+        <body>
+
+<!-- Flash Messages Start -->
+{% with messages = get_flashed_messages(with_categories=true) %}
+  {% if messages %}
+    <div class="flash-container">
+      {% for category, message in messages %}
+        <div class="flash {{ category }}">
+          {{ message }}
+          <span class="close-btn" onclick="this.parentElement.style.display='none'">&times;</span>
+        </div>
+      {% endfor %}
+    </div>
+  {% endif %}
+{% endwith %}
+<!-- Flash Messages End -->
+
+    <div class="welcome-bar">
+    <h1>Welcome {{ user['name'] }} 👋</h1>
+    <a href="/logout" class="btn-logout-top">Logout</a>
+</div>
+
+<div class="dashboard-actions">
+    <a href="/add_job" class="btn">+ Post a New Job</a>
+    <a href="/upload" class="btn">📄 Upload Resume</a>
+    <a href="/my_applications" class="btn">📋 My Applications</a>
+</div>
+
+        <div class="skills-box">
+            <h3>Your Skills</h3>
+            {% if user['skills'] %}
+                {% for skill in user['skills'].split(',') %}
+                    <span class="skill-tag">{{ skill.strip() }}</span>
+                {% endfor %}
+            {% else %}
+                <p>No skills found. Upload your resume!</p>
+            {% endif %}
+        </div>
+
+        <h2 style="margin-bottom: 15px;">All Jobs</h2>
+
+        {% if jobs %}
+            {% for job in jobs %}
+                <div class="job-card">
+                    {% if job['match'] >= 70 %}
+                        <span class="match-badge match-high">{{ job['match'] }}% Match</span>
+                    {% elif job['match'] >= 40 %}
+                        <span class="match-badge match-mid">{{ job['match'] }}% Match</span>
+                    {% else %}
+                        <span class="match-badge match-low">{{ job['match'] }}% Match</span>
+                    {% endif %}
+
+                    <div class="job-title">{{ job['title'] }}</div>
+                    <div class="job-company">Company: {{ job['company'] }}</div>
+                    <div class="job-skills"><b>Skills:</b> {{ job['skills'] }}</div>
+                    <div class="job-desc">{{ job['description'] }}</div>
+
+                    {% if job['applied'] %}
+                        <button class="apply-btn applied" disabled>Applied ✓</button>
+                    {% else %}
+                        <a href="/apply/{{ job['id'] }}"><button class="apply-btn">Apply Now</button></a>
+                    {% endif %}
+                </div>
+            {% endfor %}
+        {% else %}
+            <p>No jobs posted yet.</p>
+        {% endif %}
+    </div>
+</body>
+</html>
