@@ -226,7 +226,7 @@ def my_applications():
 def search():
     print("search route hit hua")
     query = request.args.get('q')
-    print("query mili:"query)
+    print("query mili:",query)
     if not query:
         return redirect('/')
     
@@ -236,7 +236,7 @@ def search():
     cursor = conn.cursor()  # <-- Ye line missing thi
     
     jobs = cursor.execute("SELECT * FROM jobs WHERE title LIKE ?", ('%'+query+'%',)).fetchall()
-    print("jobs mili:"len(jobs))
+    print("jobs mili:",len(jobs))
     
     conn.close()  
     return render_template('search_results.html', jobs=jobs, search_query=query)
