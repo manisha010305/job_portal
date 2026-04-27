@@ -225,7 +225,17 @@ def my_applications():
 @app.route('/search')
 def search():
     query = request.args.get('q')
+    if not query:
+        return redirect('/')
+    
+    # Database connection yahan banega
+    conn = sqlite3.connect('database.db')
+    conn.row_factory = sqlite3.Row  # Isse dict jaisa data milega
+    cursor = conn.cursor()  # <-- Ye line missing thi
+    
     jobs = cursor.execute("SELECT * FROM jobs WHERE title LIKE ?", ('%'+query+'%',)).fetchall()
+    
+    conn.close()  # Connection band karna zaroori hai
     return render_template('index.html', jobs=jobs)
 
 if __name__ == '__main__':
