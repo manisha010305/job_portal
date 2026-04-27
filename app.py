@@ -235,8 +235,10 @@ def search():
     conn.row_factory = sqlite3.Row  # Isse dict jaisa data milega
     cursor = conn.cursor()  # <-- Ye line missing thi
     
-    jobs = cursor.execute("SELECT * FROM jobs WHERE title LIKE ?", ('%'+query+'%',)).fetchall()
-    print("jobs mili:",len(jobs))
+    jobs = cursor.execute("""
+    SELECT * FROM jobs 
+    WHERE title LIKE ? OR description LIKE ? OR company LIKE ?
+""", ('%'+query+'%', '%'+query+'%', '%'+query+'%')).fetchall()
     
     conn.close()  
     return render_template('search_results.html', jobs=jobs, search_query=query)

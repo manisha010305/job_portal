@@ -2,24 +2,67 @@
 <html>
 <head>
     <title>Search Results</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 20px;
+            background: #f5f5f5;
+        }
+        .header {
+            text-align: center;
+            margin-bottom: 30px;
+        }
+        .job-card {
+            background: white;
+            border-radius: 8px;
+            padding: 20px;
+            margin: 15px 0;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+        }
+        .job-card h3 {
+            margin: 0 0 10px 0;
+            color: #333;
+        }
+        .btn {
+            display: inline-block;
+            padding: 8px 15px;
+            background: #4CAF50;
+            color: white;
+            text-decoration: none;
+            border-radius: 5px;
+            margin-top: 10px;
+        }
+        .no-jobs {
+            text-align: center;
+            padding: 50px;
+            background: white;
+            border-radius: 8px;
+        }
+    </style>
 </head>
 <body>
-    <h1>Search Results for "{{ search_query }}"</h1>
-    <a href="/">Back to Home</a>
-    <hr>
+    <div class="header">
+        <h1>Search Results for "{{ search_query }}"</h1>
+        <a href="/" class="btn">← Back to Home</a>
+    </div>
     
     {% if jobs %}
         {% for job in jobs %}
-            <div style="border: 1px solid #ccc; padding: 15px; margin: 10px;">
+            <div class="job-card">
                 <h3>{{ job['title'] }}</h3>
-                <p>Company: {{ job['company'] }}</p>
-                <p>Location: {{ job['location'] }}</p>
-                <a href="/login">Login to Apply</a>
+                <p><strong>Company:</strong> {{ job['company'] }}</p>
+                <p><strong>Location:</strong> {{ job['location'] }}</p>
+                <p>{{ job['description'] }}</p>
+                <a href="/login" class="btn">Login to Apply</a>
             </div>
         {% endfor %}
     {% else %}
-        <h3>No jobs found for "{{ search_query }}"</h3>
-        <p>Try searching "Developer" or "Python"</p>
+        <div class="no-jobs">
+            <h3>No jobs found for "{{ search_query }}"</h3>
+            <p>Try searching "Developer" or "Python"</p>
+        </div>
     {% endif %}
 </body>
 </html>
