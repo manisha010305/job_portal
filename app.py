@@ -6,6 +6,23 @@ import pdfplumber
 import os
 import random
 
+def extract_skills_from_pdf(text):
+    # Common skills ki list
+    skill_keywords = [
+        'python', 'java', 'javascript', 'react', 'node', 'sql', 'html', 'css',
+        'flask', 'django', 'git', 'aws', 'docker', 'excel', 'powerpoint',
+        'communication', 'leadership', 'management', 'marketing', 'sales'
+    ]
+    
+    found_skills = []
+    text_lower = text.lower()
+    
+    for skill in skill_keywords:
+        if skill in text_lower:
+            found_skills.append(skill)
+    
+    return found_skills
+
 def init_db():
     conn = sqlite3.connect('database.db')
     cursor = conn.cursor()
@@ -190,26 +207,19 @@ def upload():
             for page in pdf_reader.pages:
                 text += page.extract_text()
 
-            # Skills extract karo
-            found_skills = []
-            skill_keywords = ['python', 'java', 'html', 'css', 'javascript', 'sql', 'ms excel', 'ms word', 'c programming', 'problem solving']
-            
-            text_lower = text.lower()
-            for skill in skill_keywords:
-                if skill in text_lower:
-                    found_skills.append(skill.title())
-
-            extracted_skills = extracted_skills_from_Pdf(resume_text)
-            skills_str = ', '.join(extracted_skills)
-
-            # Database mein update karo
-            conn = sqlite3.connect('database.db')
-            conn.execute('UPDATE users SET skills = ? WHERE id = ?', 
-                        (skills_str, session['user_id']))
-            conn.commit()
-            conn.close()
-
-            return redirect('/dashboard')  
+                 # Skills extract karo
+        found_skills = extract_skills_from_pdf(text)  # text variable use kar, resume_text nahi
+        skills_string = ','.join(found_skills)
+        
+        # Database mein update karo
+        conn = sqlite3.connect('database.db')
+        conn.execute('UPDATE users SET skills = ? WHERE id = ?', 
+                    (skills_string, session['user_id']))
+        conn.commit()
+        conn.close()
+        
+        flash('Resume uploaded! Skills found: ' + skills_string)
+        return redirect('/dashboard') 
 
     return render_template('upload.html')
 
