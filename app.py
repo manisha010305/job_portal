@@ -55,7 +55,7 @@ def home():
 
 def validate_password(password):
     if len(password) < 8:
-        return "Password 8 character ka hona chahiye"
+        return "Password shoud be 8 character"
     if not re.search("[a-z]", password):
         return "Ek chhota letter daal"
     if not re.search("[A-Z]", password):
@@ -79,7 +79,7 @@ def signup():
         if error:
             return render_template('signup.html', error=error)  
         
-        if not role:  # <-- ROLE CHECK ADD KIYA
+        if not role:  
             return render_template('signup.html', error="Role select karo")
         
         conn = sqlite3.connect('database.db')
@@ -88,7 +88,7 @@ def signup():
                       (name, email, password, role))
         conn.commit()
         conn.close()
-        flash('Signup success! Ab login karo.')
+        flash('Signup success!')
         return redirect('/login')
     
     return render_template('signup.html')
@@ -106,11 +106,10 @@ def login():
         conn.close()
 
         if user:
-            # Session mein data daal de - YE ZARURI HAI
-            session['user_id'] = user[0] # id
-            session['name'] = user[1] # name
-            session['email'] = user[2] # email
-            session['role'] = user[4] # role - ye 4th index pe hai
+            session['user_id'] = user[0] 
+            session['name'] = user[1] 
+            session['email'] = user[2] 
+            session['role'] = user[4] 
             return redirect('/dashboard')
         else:
             return render_template('login.html', error="Galat email ya password")
@@ -132,12 +131,11 @@ def dashboard():
     if user['skills']and user['skills'].strip():
         user_skills = [s.strip().lower() for s in user['skills'].split(',')]
 
-    # Ye 3 line important hain - check kar ye hain ya nahi
     applied_jobs = conn.execute('SELECT job_id FROM applications WHERE user_id =?',
                                (session['user_id'],)).fetchall()
     applied_job_ids = [row[0] for row in applied_jobs]
 
-    jobs_data = conn.execute('SELECT * FROM jobs').fetchall() # Ye line miss thi
+    jobs_data = conn.execute('SELECT * FROM jobs').fetchall() 
 
     conn.close()
 
@@ -208,11 +206,11 @@ def upload():
             for page in pdf_reader.pages:
                 text += page.extract_text()
 
-                 # Skills extract karo
-        found_skills = extract_skills_from_pdf(text)  # text variable use kar, resume_text nahi
+                 
+        found_skills = extract_skills_from_pdf(text) 
         skills_string = ','.join(found_skills)
         
-        # Database mein update karo
+    
         conn = sqlite3.connect('database.db')
         conn.execute('UPDATE users SET skills = ? WHERE id = ?', 
                     (skills_string, session['user_id']))
@@ -238,14 +236,14 @@ def apply(job_id):
     
     conn = sqlite3.connect('database.db')
     
-    # Check kar ki pehle se apply toh nahi kiya
+    
     already_applied = conn.execute('SELECT * FROM applications WHERE user_id=? AND job_id=?', 
                                   (user_id, job_id)).fetchone()
     
     if already_applied:
         flash('You have already applied to this job!', 'error')
     else:
-        # Apply kar de
+        
         conn.execute('INSERT INTO applications (user_id, job_id) VALUES (?,?)', 
                     (user_id, job_id))
         conn.commit()
@@ -281,10 +279,10 @@ def search():
     if not query:
         return redirect('/')
     
-    # Database connection yahan banega
+    
     conn = sqlite3.connect('database.db')
-    conn.row_factory = sqlite3.Row  # Isse dict jaisa data milega
-    cursor = conn.cursor()  # <-- Ye line missing thi
+    conn.row_factory = sqlite3.Row  
+    cursor = conn.cursor()  
     
     jobs = cursor.execute("""
     SELECT * FROM jobs 
