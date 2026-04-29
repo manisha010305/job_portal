@@ -1,13 +1,10 @@
+import re
 from flask import Flask, request, redirect, session, render_template, flash
 import sqlite3
 import PyPDF2
 import pdfplumber
 import os
-
-app = Flask(__name__)
-app.secret_key = 'secret123'  # Session ke liye zaroori hai
-
-# Uploads folder bana de agar nahi hai to
+import random
 if not os.path.exists('uploads'):
     os.makedirs('uploads')
 
@@ -17,25 +14,35 @@ def home():
         return redirect('/dashboard')
     return render_template('index.html')  
 
-@app.route('/signup', methods=['GET', 'POST'])
+def validate_password(password):
+    if len(password) < 8:
+        return "Password 8 character ka hona chahiye"
+    if not re.search("[a-z]", password):
+        return "Ek chhota letter daal"
+    if not re.search("[A-Z]", password):
+        return "Ek bada letter daal"
+    if not re.search("[0-9]", password):
+        return "Ek number daal"
+    if not re.search("[!@#$%^&*]", password):
+        return "Ek special character daal:!@#$%^&*"
+    return None
+
+@app.route('/signup', methods=['GET','POST'])
 def signup():
     if request.method == 'POST':
         name = request.form['name']
         email = request.form['email']
         password = request.form['password']
-        
-        conn = sqlite3.connect('database.db')
-        try:
-            conn.execute('INSERT INTO users (name, email, password) VALUES (?, ?, ?)', 
-                        (name, email, password))
-            conn.commit()
-            conn.close()
-            return redirect('/login')
-        except:
-            conn.close()
-            return "Email already exists! <a href='/signup'>Try again</a>"
-    
+        role = request.form['role']
+
+        # Strong password check
+        error = validate_password(password)
+        if error:
+            return f'<h3>{error}</h3><a href="/signup">Wapas jao</a>'
+
     return render_template('signup.html')
+
+
 @app.route('/login', methods=['GET', 'POST'])
 def login():
     if request.method == 'POST':
@@ -144,7 +151,6 @@ def upload():
             return "No file selected! <a href='/upload'>Try again</a>"
 
         if file and file.filename.endswith('.pdf'):
-            # Tera resume extraction wala code yahan rahega
             text = ""
             pdf_reader = PyPDF2.PdfReader(file)
             for page in pdf_reader.pages:
@@ -152,7 +158,7 @@ def upload():
 
             # Skills extract karo
             found_skills = []
-            skill_keywords = ['python', 'java', 'html', 'css', 'javascript', 'sql', 'excel', 'ms excel', 'ms word', 'c programming', 'problem solving']
+            skill_keywords = ['python', 'java', 'html', 'css', 'javascript', 'sql', 'ms excel', 'ms word', 'c programming', 'problem solving']
             
             text_lower = text.lower()
             for skill in skill_keywords:

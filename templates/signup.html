@@ -11,6 +11,9 @@
         <div class="auth-card">
             <h1>Create Account 🚀</h1>
             <p class="subtitle">Join Job Portal to find your dream job</p>
+            {% if error %}
+         <p style="color: red;">{{ error }}</p>
+            {% endif %}
 
             <form method="POST" action="/signup">
                 <div class="form-group">
