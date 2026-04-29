@@ -16,14 +16,15 @@ def init_db():
             name TEXT NOT NULL,
             email TEXT NOT NULL UNIQUE,
             password TEXT NOT NULL,
-            role TEXT NOT NULL
+            role TEXT NOT NULL,
+            skills TEXT DEFAULT"
         )
     ''')
     conn.commit()
     conn.close()
     
 init_db()
-    
+
 app = Flask(__name__)  
 app.secret_key = 'hirehub_secret_key_123' 
 if not os.path.exists('uploads'):
@@ -74,29 +75,30 @@ def signup():
     
     return render_template('signup.html')
 
-
-@app.route('/login', methods=['GET', 'POST'])
+@app.route('/login', methods=['GET','POST'])
 def login():
     if request.method == 'POST':
         email = request.form['email']
         password = request.form['password']
-        
+
         conn = sqlite3.connect('database.db')
-        conn.row_factory = sqlite3.Row
-        user = conn.execute('SELECT * FROM users WHERE email = ? AND password = ?', 
-                           (email, password)).fetchone()
+        cursor = conn.cursor()
+        cursor.execute("SELECT * FROM users WHERE email=? AND password=?", (email, password))
+        user = cursor.fetchone()
         conn.close()
-        
+
         if user:
-            session['user_id'] = user['id']
-            session['name'] = user['name']
-            flash('login successfull welcome','success')
+            # Session mein data daal de - YE ZARURI HAI
+            session['user_id'] = user[0] # id
+            session['name'] = user[1] # name
+            session['email'] = user[2] # email
+            session['role'] = user[4] # role - ye 4th index pe hai
             return redirect('/dashboard')
         else:
-            flash('wrong email or password','error')
-            return "Invalid email or password! <a href='/login'>Try again</a>"
-    
+            return render_template('login.html', error="Galat email ya password")
+
     return render_template('login.html')
+
 @app.route('/dashboard')
 def dashboard():
     if 'user_id' not in session:
@@ -109,7 +111,7 @@ def dashboard():
                        (session['user_id'],)).fetchone()
 
     user_skills = []
-    if user['skills']:
+    if user['skills']and user['skills'].strip():
         user_skills = [s.strip().lower() for s in user['skills'].split(',')]
 
     # Ye 3 line important hain - check kar ye hain ya nahi
@@ -197,8 +199,8 @@ def upload():
                 if skill in text_lower:
                     found_skills.append(skill.title())
 
-            # Duplicate hatao
-            skills_str = ', '.join(list(dict.fromkeys(found_skills)))
+            extracted_skills = extracted_skills_from_Pdf(resume_text)
+            skills_str = ', '.join(extracted_skills)
 
             # Database mein update karo
             conn = sqlite3.connect('database.db')
