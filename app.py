@@ -88,7 +88,8 @@ def signup():
                       (name, email, password, role))
         conn.commit()
         conn.close()
-        return '<h3>Signup success!</h3><a href="/login">Login karo</a>'
+        flash('Signup success! Ab login karo.')
+        return redirect('/login')
     
     return render_template('signup.html')
 

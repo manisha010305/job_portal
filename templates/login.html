@@ -12,6 +12,15 @@
             <h1>Welcome Back 👋</h1>
             <p class="subtitle">Login to your Job Portal account</p>
 
+    {% with messages = get_flashed_messages() %}
+      {% if messages %}
+        {% for message in messages %}
+          <div style="background: #d4edda; color: #155724; padding: 10px; border-radius: 5px; margin-bottom: 15px; text-align: center;">
+            {{ message }}
+          </div>
+        {% endfor %}
+      {% endif %}
+    {% endwith %}
             <form method="POST" action="/login">
                 <div class="form-group">
                     <label>Email</label>
