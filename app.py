@@ -17,12 +17,12 @@ def init_db():
             email TEXT NOT NULL UNIQUE,
             password TEXT NOT NULL,
             role TEXT NOT NULL,
-            skills TEXT DEFAULT"
+            skills TEXT DEFAULT ''
         )
     ''')
     conn.commit()
     conn.close()
-    
+
 init_db()
 
 app = Flask(__name__)  
