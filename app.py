@@ -35,13 +35,24 @@ def signup():
         name = request.form['name']
         email = request.form['email']
         password = request.form['password']
-        role = request.form['role']
-
+        role = request.form.get('role')  
+        
         # Strong password check
         error = validate_password(password)
         if error:
-            return f'<h3>{error}</h3><a href="/signup">Wapas jao</a>'
-
+            return render_template('signup.html', error=error)  
+        
+        if not role:  # <-- ROLE CHECK ADD KIYA
+            return render_template('signup.html', error="Role select karo")
+        
+        conn = sqlite3.connect('database.db')
+        cursor = conn.cursor()
+        cursor.execute("INSERT INTO users (name,email,password,role) VALUES (?,?,?,?)",
+                      (name, email, password, role))
+        conn.commit()
+        conn.close()
+        return '<h3>Signup success!</h3><a href="/login">Login karo</a>'
+    
     return render_template('signup.html')
 
 

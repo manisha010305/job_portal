@@ -11,6 +11,7 @@
         <div class="auth-card">
             <h1>Create Account 🚀</h1>
             <p class="subtitle">Join Job Portal to find your dream job</p>
+
             {% if error %}
          <p style="color: red;">{{ error }}</p>
             {% endif %}
@@ -26,12 +27,19 @@
                     <input type="email" name="email" placeholder="Enter your email" required>
                 </div>
                 
-                <div class="form-group">
-                    <label>Password</label>
-                    <input type="password" name="password" placeholder="Create password" required>
-                </div>
+                        </div>
 
-                <button type="submit" class="auth-btn">Sign Up</button>
+        <div class="form-group">
+            <label>Select Role</label>
+            <select name="role" required>
+                <option value="">-- Choose Role --</option>
+                <option value="job_seeker">Job Seeker</option>
+                <option value="recruiter">Recruiter</option>
+            </select>
+        </div>
+
+    <button type="submit">Signup</button>
+</form>
             </form>
 
             <p class="auth-link">
