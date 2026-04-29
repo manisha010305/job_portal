@@ -5,6 +5,25 @@ import PyPDF2
 import pdfplumber
 import os
 import random
+
+def init_db():
+    conn = sqlite3.connect('database.db')
+    cursor = conn.cursor()
+    cursor.execute("DROP TABLE IF EXISTS users")
+    cursor.execute('''
+        CREATE TABLE users (
+            id INTEGER PRIMARY KEY AUTOINCREMENT,
+            name TEXT NOT NULL,
+            email TEXT NOT NULL UNIQUE,
+            password TEXT NOT NULL,
+            role TEXT NOT NULL
+        )
+    ''')
+    conn.commit()
+    conn.close()
+    
+init_db()
+    
 app = Flask(__name__)  
 app.secret_key = 'hirehub_secret_key_123' 
 if not os.path.exists('uploads'):
