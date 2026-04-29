@@ -5,6 +5,8 @@ import PyPDF2
 import pdfplumber
 import os
 import random
+app = Flask(__name__)  
+app.secret_key = 'hirehub_secret_key_123' 
 if not os.path.exists('uploads'):
     os.makedirs('uploads')
 
